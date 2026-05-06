@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TH Cooling Guidance — Miri Hospital NICU</title>
+<style>
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f4f6f9;
+    color: #1a2233;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .app-header {
+    background: #1e3a5f;
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-header .logo {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .app-header h1 { font-size: 17px; font-weight: 600; line-height: 1.2; }
+  .app-header .subtitle { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+  .header-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    font-size: 11px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Layout ── */
+  .app-body { display: flex; min-height: calc(100vh - 64px); }
+  .sidebar {
+    width: 220px;
+    background: #fff;
+    border-right: 1px solid #e2e8f0;
+    padding: 1rem 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-group-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.75rem 1rem 0.25rem;
+  }
+  .nav-btn {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%;
+    padding: 9px 1rem;
+    border: none; background: transparent;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: #475569;
+    text-align: left;
+    border-left: 3px solid transparent;
+    transition: all 0.12s;
+    border-radius: 0;
+  }
+  .nav-btn .icon { font-size: 17px; width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-btn:hover { background: #f1f5f9; color: #1e3a5f; }
+  .nav-btn.active { background: #eff6ff; color: #1e3a5f; border-left-color: #2563eb; font-weight: 600; }
+
+  .main-content { flex: 1; padding: 1.5rem; min-width: 0; }
+
+  /* ── Screens ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 14px; font-weight: 600;
+    color: #1e3a5f;
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  /* ── Tables ── */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tbl th {
+    font-size: 11px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 7px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left; background: #f8fafc;
+  }
+  .tbl td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: #1a2233; line-height: 1.4; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover td { background: #f8fafc; }
+  .tbl td:first-child { color: #475569; }
+  .tbl td strong { color: #1e3a5f; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+  }
+  .badge-ok   { background: #dcfce7; color: #166534; }
+  .badge-warn { background: #fef9c3; color: #854d0e; }
+  .badge-no   { background: #fee2e2; color: #991b1b; }
+  .badge-info { background: #dbeafe; color: #1e40af; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+
+  /* ── Alert boxes ── */
+  .alert {
+    border-radius: 8px; padding: 0.75rem 1rem;
+    font-size: 13px; margin-bottom: 0.75rem;
+    display: flex; gap: 10px; align-items: flex-start;
+    line-height: 1.5;
+  }
+  .alert .ai { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+  .alert.danger { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+  .alert.warn   { background: #fffbeb; color: #78350f; border: 1px solid #fcd34d; }
+  .alert.info   { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+  .alert.success{ background: #f0fdf4; color: #14532d; border: 1px solid #86efac; }
+
+  /* ── Radio options ── */
+  .radio-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .radio-opt {
+    padding: 5px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    font-size: 12.5px;
+    cursor: pointer;
+    color: #475569;
+    background: #fff;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .radio-opt:hover { border-color: #93c5fd; color: #1e40af; }
+  .radio-opt.sel { background: #dbeafe; color: #1e40af; border-color: #3b82f6; font-weight: 600; }
+
+  /* ── Form fields ── */
+  .field-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .field-label { font-size: 13px; color: #475569; flex: 0 0 170px; padding-top: 6px; line-height: 1.3; }
+  .field-label small { display: block; font-size: 11px; color: #94a3b8; margin-top: 1px; }
+  .field-body { flex: 1; min-width: 200px; }
+  input[type=number] {
+    border: 1px solid #cbd5e1; border-radius: 8px;
+    padding: 6px 10px; font-size: 13px;
+    background: #fff; color: #1a2233; width: 100px;
+  }
+  input[type=number]:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px #dbeafe; }
+  .divider { height: 1px; background: #f1f5f9; margin: 0.75rem 0; }
+
+  /* ── Result box ── */
+  .result-box {
+    border-radius: 12px; padding: 1rem 1.25rem;
+    margin-top: 1rem; border: 1.5px solid transparent;
+  }
+  .result-box.go     { background: #f0fdf4; border-color: #4ade80; }
+  .result-box.no     { background: #fff1f2; border-color: #f87171; }
+  .result-box.discuss{ background: #fffbeb; border-color: #fbbf24; }
+  .result-box .r-title { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+  .result-box.go .r-title     { color: #14532d; }
+  .result-box.no .r-title     { color: #7f1d1d; }
+  .result-box.discuss .r-title{ color: #78350f; }
+  .result-box .r-sub { font-size: 13px; line-height: 1.5; margin-top: 4px; opacity: 0.85; }
+
+  /* ── Thompson score ── */
+  .ts-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .ts-row:last-child { border-bottom: none; }
+  .ts-label { font-size: 13px; color: #1a2233; flex: 0 0 160px; }
+  .ts-opts { display: flex; gap: 4px; flex-wrap: wrap; }
+  .ts-btn {
+    min-width: 32px; height: 32px; padding: 0 8px;
+    border: 1px solid #cbd5e1; border-radius: 6px;
+    font-size: 12px; cursor: pointer;
+    background: #fff; color: #475569;
+    transition: all 0.1s; white-space: nowrap;
+  }
+  .ts-btn:hover { border-color: #93c5fd; }
+  .ts-btn.sel { background: #dbeafe; color: #1e40af; border-color: #3b82f6; font-weight: 700; }
+
+  .score-total {
+    display: flex; align-items: center; gap: 20px;
+    background: #1e3a5f; color: white;
+    border-radius: 12px; padding: 1rem 1.25rem;
+    margin-top: 1rem;
+  }
+  .score-total .num { font-size: 40px; font-weight: 700; line-height: 1; }
+  .score-total .label-group .sev { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .score-total .label-group .rec { font-size: 12px; opacity: 0.8; line-height: 1.4; }
+
+  /* ── Phase tabs ── */
+  .phase-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+  .phase-tab {
+    flex: 1; padding: 9px; text-align: center;
+    border: 1px solid #e2e8f0; border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; background: #fff; color: #475569;
+    transition: all 0.12s;
+  }
+  .phase-tab:hover { border-color: #93c5fd; color: #1e40af; }
+  .phase-tab.active { background: #1e3a5f; color: white; border-color: #1e3a5f; }
+
+  /* ── Monitoring grid ── */
+  .mon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 1rem; }
+  .mon-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.75rem 1rem; }
+  .mon-card .mfreq { font-size: 11px; color: #94a3b8; margin-bottom: 3px; }
+  .mon-card .mtest { font-size: 13px; font-weight: 600; color: #1e3a5f; margin-bottom: 2px; }
+  .mon-card .mtarget { font-size: 12px; color: #475569; }
+
+  /* ── Checklist ── */
+  .cl-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 9px 0; border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+  }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-box {
+    width: 20px; height: 20px; border-radius: 5px;
+    border: 1.5px solid #cbd5e1;
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.12s;
+  }
+  .cl-box.done { background: #16a34a; border-color: #16a34a; }
+  .cl-box.done::after { content: '✓'; color: white; font-size: 12px; font-weight: 700; }
+  .cl-text { font-size: 13px; color: #1a2233; line-height: 1.5; }
+  .cl-text.done { text-decoration: line-through; color: #94a3b8; }
+  .cl-progress {
+    background: #f1f5f9; border-radius: 8px; padding: 0.75rem 1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .cl-progress .pnum { font-size: 18px; font-weight: 700; color: #1e3a5f; }
+  .cl-progress .plabel { font-size: 12px; color: #64748b; }
+  .progress-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #16a34a; border-radius: 3px; transition: width 0.3s; }
+  .btn-reset {
+    padding: 6px 14px; border: 1px solid #cbd5e1; border-radius: 8px;
+    background: #fff; font-size: 12px; color: #475569; cursor: pointer;
+  }
+  .btn-reset:hover { background: #f1f5f9; }
+
+  /* ── Footer ── */
+  .app-footer {
+    text-align: center; padding: 1.5rem;
+    font-size: 11px; color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    background: #fff;
+    margin-top: 2rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .sidebar { display: none; }
+    .mob-nav { display: flex; }
+    .main-content { padding: 1rem; }
+    .field-label { flex: 0 0 100%; padding-top: 0; }
+  }
+  .mob-nav {
+    display: none; overflow-x: auto; gap: 6px;
+    padding: 0.75rem 1rem; background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mob-nav-btn {
+    flex-shrink: 0; padding: 6px 12px;
+    border: 1px solid #e2e8f0; border-radius: 20px;
+    font-size: 12px; background: #fff; color: #475569; cursor: pointer;
+  }
+  .mob-nav-btn.active { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
+
+  /* ── Utility ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="app-header">
+  <div class="logo"><img src="TH_icon_brain.svg" alt="Brain with snowflake icon" style="width:34px;height:34px;object-fit:contain;border-radius:6px"></div>
+  <div>
+    <h1>Therapeutic Hypothermia — Clinical Guidance</h1>
+    <div class="subtitle">Miri Hospital NICU · MIRI-NICU-SOP-HIE · March 2026</div>
+  </div>
+  <div class="header-badge">Tecotherm Neo · AAP 2026</div>
+</header>
+
+<!-- Mobile nav -->
+<nav class="mob-nav" id="mob-nav" aria-label="Mobile navigation"></nav>
+
+<!-- Body -->
+<div class="app-body">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" aria-label="Section navigation">
+    <div class="sidebar-group-label">Assessment</div>
+    <button class="nav-btn active" onclick="showScreen('eligibility',this)">
+      <span class="icon">✅</span> Eligibility checker
+    </button>
+    <button class="nav-btn" onclick="showScreen('thompson',this)">
+      <span class="icon">🧠</span> Thompson Score
+    </button>
+    <div class="sidebar-group-label">Management</div>
+    <button class="nav-btn" onclick="showScreen('protocol',this)">
+      <span class="icon">🌡️</span> Cooling protocol
+    </button>
+    <button class="nav-btn" onclick="showScreen('fluids',this)">
+      <span class="icon">💧</span> Fluid regimen
+    </button>
+    <button class="nav-btn" onclick="showScreen('monitoring',this)">
+      <span class="icon">📊</span> Monitoring targets
+    </button>
+    <button class="nav-btn" onclick="showScreen('drugs',this)">
+      <span class="icon">💊</span> Drug dosing
+    </button>
+    <div class="sidebar-group-label">Documentation</div>
+    <button class="nav-btn" onclick="showScreen('checklist',this)">
+      <span class="icon">📋</span> Pre-cooling checklist
+    </button>
+    <button class="nav-btn" onclick="showScreen('followup',this)">
+      <span class="icon">📅</span> Follow-up pathway
+    </button>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content" id="main">
+
+    <!-- ══ ELIGIBILITY ══ -->
+    <section id="screen-eligibility" class="screen active" aria-label="Eligibility checker">
+      <div class="section-label">Step-by-step eligibility assessment</div>
+
+      <div class="card">
+        <div class="card-title">📐 Entry criteria — gestational age &amp; birth weight</div>
+        <div class="field-row">
+          <div class="field-label">Gestational age</div>
+          <div class="field-body">
+            <div class="radio-row" id="ga-opts">
+              <span class="radio-opt" onclick="pick('ga','ge36',this)">≥36 weeks</span>
+              <span class="radio-opt" onclick="pick('ga','35-36',this)">35–35⁶⁄₇ weeks</span>
+              <span class="radio-opt" onclick="pick('ga','lt35',this)">&lt;35 weeks</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Birth weight</div>
+          <div class="field-body">
+            <div class="radio-row" id="bw-opts">
+              <span class="radio-opt" onclick="pick('bw','gt2',this)">&gt;2 kg</span>
+              <span class="radio-opt" onclick="pick('bw','le2',this)">≤2 kg</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Age at presentation<small>from birth</small></div>
+          <div class="field-body">
+            <div class="radio-row" id="age-opts">
+              <span class="radio-opt" onclick="pick('age','le6',this)">≤6 hours</span>
+              <span class="radio-opt" onclick="pick('age','6-12cooled',this)">6–12h, transfer-cooled</span>
+              <span class="radio-opt" onclick="pick('age','6-12not',this)">6–12h, not cooled</span>
+              <span class="radio-opt" onclick="pick('age','gt12',this)">&gt;12 hours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔬 Criterion A — evidence of hypoxia-ischaemia</div>
+        <div class="field-row">
+          <div class="field-label">Blood gas pH<small>cord or ≤1h of birth</small></div>
+          <div class="field-body">
+            <div class="radio-row" id="ph-opts">
+              <span class="radio-opt" onclick="pick('ph','le70',this)">pH ≤7.0</span>
+              <span class="radio-opt" onclick="pick('ph','701-715',this)">pH 7.01–7.15</span>
+              <span class="radio-opt" onclick="pick('ph','gt715',this)">pH &gt;7.15</span>
+              <span class="radio-opt" onclick="pick('ph','na',this)">Not available</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Base deficit (mEq/L)</div>
+          <div class="field-body">
+            <div class="radio-row" id="bd-opts">
+              <span class="radio-opt" onclick="pick('bd','ge16',this)">BD ≥16</span>
+              <span class="radio-opt" onclick="pick('bd','10-15',this)">BD 10–15</span>
+              <span class="radio-opt" onclick="pick('bd','lt10',this)">BD &lt;10</span>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:12px;color:#64748b;margin-bottom:10px;font-style:italic">
+          The following are required if pH 7.01–7.15 OR BD 10–15 (borderline acidosis — all three must be present):
+        </div>
+        <div class="field-row">
+          <div class="field-label">Apgar at 10 minutes</div>
+          <div class="field-body">
+            <div class="radio-row" id="apgar-opts">
+              <span class="radio-opt" onclick="pick('apgar','le5',this)">≤5</span>
+              <span class="radio-opt" onclick="pick('apgar','gt5',this)">&gt;5</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">PPV / IPPV ≥10 min at birth</div>
+          <div class="field-body">
+            <div class="radio-row" id="ppv-opts">
+              <span class="radio-opt" onclick="pick('ppv','yes',this)">Yes</span>
+              <span class="radio-opt" onclick="pick('ppv','no',this)">No</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Acute perinatal sentinel event<small>cord prolapse, abruption, uterine rupture, shoulder dystocia, acute bradycardia</small></div>
+          <div class="field-body">
+            <div class="radio-row" id="sentinel-opts">
+              <span class="radio-opt" onclick="pick('sentinel','yes',this)">Yes</span>
+              <span class="radio-opt" onclick="pick('sentinel','no',this)">No</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🧠 Criterion B — neurological assessment</div>
+        <div class="field-row">
+          <div class="field-label">Modified Sarnat staging</div>
+          <div class="field-body">
+            <div class="radio-row" id="sarnat-opts">
+              <span class="radio-opt" onclick="pick('sarnat','II',this)">Stage II — moderate</span>
+              <span class="radio-opt" onclick="pick('sarnat','III',this)">Stage III — severe</span>
+              <span class="radio-opt" onclick="pick('sarnat','I',this)">Stage I / normal</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Thompson Score<small>use calculator tab</small></div>
+          <div class="field-body">
+            <input type="number" id="ts-input" min="0" max="22" placeholder="0–22" oninput="updateEligibility()">
+            <span style="font-size:12px;color:#64748b;margin-left:8px">≥7 = cooling indicated</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Clinical / electrographic seizures</div>
+          <div class="field-body">
+            <div class="radio-row" id="sz-opts">
+              <span class="radio-opt" onclick="pick('sz','yes',this)">Yes</span>
+              <span class="radio-opt" onclick="pick('sz','no',this)">No</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📡 Criterion C — amplitude-integrated EEG <span style="font-weight:400;font-size:12px;color:#64748b">(additional support for borderline cases)</span></div>
+        <div class="field-row">
+          <div class="field-label">aEEG background pattern</div>
+          <div class="field-body">
+            <div class="radio-row" id="aeeg-opts">
+              <span class="radio-opt" onclick="pick('aeeg','normal',this)">CNV — normal</span>
+              <span class="radio-opt" onclick="pick('aeeg','dnv',this)">DNV — borderline</span>
+              <span class="radio-opt" onclick="pick('aeeg','bs',this)">Burst suppression</span>
+              <span class="radio-opt" onclick="pick('aeeg','clv',this)">CLV / flat trace</span>
+              <span class="radio-opt" onclick="pick('aeeg','na',this)">Not available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="eligibility-result"></div>
+
+      <div class="alert info" style="margin-top:0.5rem">
+        <span class="ai">ℹ️</span>
+        <span>When borderline, always discuss with senior specialist before initiating. Document all decisions and parental consent before commencing cooling.</span>
+      </div>
+    </section>
+
+    <!-- ══ THOMPSON ══ -->
+    <section id="screen-thompson" class="screen" aria-label="Thompson Score calculator">
+      <div class="section-label">Thompson Score — validated bedside HIE severity assessment</div>
+      <div class="card">
+        <div id="ts-rows"></div>
+      </div>
+      <div class="score-total" id="ts-total-bar">
+        <div class="num" id="ts-total-num">0</div>
+        <div class="label-group">
+          <div class="sev" id="ts-sev">Complete the assessment above</div>
+          <div class="rec" id="ts-rec"></div>
+        </div>
+      </div>
+      <div class="alert info" style="margin-top:1rem">
+        <span class="ai">ℹ️</span>
+        <span><strong>Repeat every 4–6 hours</strong> during cooling. For intubated neonates: score respirations on underlying drive; use gag reflex if suck not assessable; interpret with caution when sedated.</span>
+      </div>
+
+      <div class="card" style="margin-top:1rem">
+        <div class="card-title">📊 Severity classification reference</div>
+        <table class="tbl">
+          <thead><tr><th>Score</th><th>Severity</th><th>Cooling recommendation</th></tr></thead>
+          <tbody>
+            <tr><td>0–6</td><td><span class="badge badge-ok">Mild HIE</span></td><td>Cooling NOT indicated — close observation</td></tr>
+            <tr><td>7–10</td><td><span class="badge badge-warn">Moderate HIE</span></td><td>Cooling INDICATED if other criteria met — initiate promptly</td></tr>
+            <tr><td>11–14</td><td><span class="badge badge-warn">Moderate-severe HIE</span></td><td>Cooling INDICATED — urgent initiation and intensive monitoring</td></tr>
+            <tr><td>15–22</td><td><span class="badge badge-no">Severe HIE</span></td><td>Cooling INDICATED — immediate initiation + maximum monitoring. Consider palliative discussion if score ≥20</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ PROTOCOL ══ -->
+    <section id="screen-protocol" class="screen" aria-label="Cooling protocol">
+      <div class="section-label">Tecotherm Neo servo-controlled cooling — protocol reference</div>
+
+      <div class="card">
+        <div class="card-title">⚙️ Tecotherm Neo settings summary</div>
+        <table class="tbl">
+          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Mode</td><td><strong>Whole-body servo-controlled cooling</strong></td></tr>
+            <tr><td>Target temperature</td><td><strong>33.5°C</strong> (core / rectal)</td></tr>
+            <tr><td>Rectal probe insertion depth</td><td>5 cm — secure and confirm position</td></tr>
+            <tr><td>Low temperature alarm</td><td>33.0°C</td></tr>
+            <tr><td>High temperature alarm</td><td>34.0°C</td></tr>
+            <tr><td>Acceptable maintenance range</td><td>33.0–34.0°C</td></tr>
+            <tr><td>Total duration</td><td>72 hours from initiation</td></tr>
+            <tr><td>Rewarming rate</td><td>0.5°C per hour until 36.5°C</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="phase-tabs">
+        <button class="phase-tab active" onclick="showPhase('induction',this)">🧊 Induction</button>
+        <button class="phase-tab" onclick="showPhase('maintenance',this)">🌡️ Maintenance</button>
+        <button class="phase-tab" onclick="showPhase('rewarm',this)">🔆 Rewarming</button>
+        <button class="phase-tab" onclick="showPhase('aeeg',this)">📡 aEEG patterns</button>
+      </div>
+
+      <div id="phase-induction">
+        <div class="card">
+          <div class="card-title">Induction phase — reaching target temperature</div>
+          <table class="tbl">
+            <tr><td>Time to target</td><td>60–90 minutes</td></tr>
+            <tr><td>Temperature monitoring</td><td>Every <strong>15 minutes</strong> during induction</td></tr>
+            <tr><td>Probe confirmation</td><td>Confirm rectal probe at exactly 5 cm, secured with tape</td></tr>
+            <tr><td>Document</td><td>Start time, initial temperature, time target reached</td></tr>
+          </table>
+        </div>
+        <div class="alert danger">
+          <span class="ai">🚫</span>
+          <span><strong>Do NOT use passive cooling</strong> (fans, ice packs, cold water) once Tecotherm Neo is connected. Passive methods risk dangerous overcooling and cannot be servo-controlled.</span>
+        </div>
+      </div>
+
+      <div id="phase-maintenance" style="display:none">
+        <div class="card">
+          <div class="card-title">Maintenance phase — 72 hours continuous cooling</div>
+          <table class="tbl">
+            <tr><td>Target core temperature</td><td>33.0–34.0°C continuously</td></tr>
+            <tr><td>Temperature monitoring</td><td>Hourly during maintenance</td></tr>
+            <tr><td>aEEG monitoring</td><td>Continuous (Natus Video aEEG) — document at each shift handover</td></tr>
+            <tr><td>Blood gas</td><td>4-hourly — targets pCO₂ 40–55 mmHg, pH &gt;7.1</td></tr>
+            <tr><td>Blood glucose</td><td>Target &gt;2.6 mmol/L — 4-hourly monitoring</td></tr>
+            <tr><td>Expected heart rate</td><td>Bradycardia (80–100 bpm) is expected and acceptable during cooling</td></tr>
+            <tr><td>SpO₂ target</td><td>90–95% in term neonates</td></tr>
+          </table>
+        </div>
+        <div class="alert warn">
+          <span class="ai">⚠️</span>
+          <span>Investigate if HR &lt;60 bpm or sustained arrhythmia. Measure QTc on daily ECG strip — QTc prolongation can occur during TH.</span>
+        </div>
+        <div class="card">
+          <div class="card-title">📡 Natus Video aEEG — monitoring setup</div>
+          <table class="tbl">
+            <tr><td>Time scale</td><td>6 cm/hour</td></tr>
+            <tr><td>Filter</td><td>2–15 Hz bandpass</td></tr>
+            <tr><td>Channels</td><td>Biparietal</td></tr>
+            <tr><td>Electrode positions</td><td>C3, C4, P3, P4 + ground electrode</td></tr>
+            <tr><td>Electrode impedance</td><td>&lt;10 kΩ</td></tr>
+            <tr><td>Duration</td><td>Continuous throughout 72h cooling and rewarming</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div id="phase-rewarm" style="display:none">
+        <div class="card">
+          <div class="card-title">Rewarming phase — gradual controlled warming</div>
+          <table class="tbl">
+            <tr><td>Rewarming rate</td><td><strong>0.5°C per hour</strong> — do not exceed</td></tr>
+            <tr><td>Target end temperature</td><td>36.5°C</td></tr>
+            <tr><td>Estimated duration</td><td>~6 hours (33.5°C → 36.5°C)</td></tr>
+            <tr><td>Temperature monitoring</td><td>Hourly until 36.5°C reached</td></tr>
+            <tr><td>Blood glucose</td><td>4-hourly — watch for rebound hypoglycaemia</td></tr>
+            <tr><td>Electrolytes</td><td>4-hourly during rewarming</td></tr>
+            <tr><td>Blood pressure</td><td>Continuous — watch for haemodynamic instability</td></tr>
+            <tr><td>Enteral feeds</td><td>Commence when haemodynamically stable and tolerated</td></tr>
+          </table>
+        </div>
+        <div class="alert warn">
+          <span class="ai">⚠️</span>
+          <span>Monitor for haemodynamic instability, metabolic rebound, rebound hypoglycaemia, and electrolyte shifts during rewarming phase.</span>
+        </div>
+      </div>
+
+      <div id="phase-aeeg" style="display:none">
+        <div class="card">
+          <div class="card-title">aEEG background pattern interpretation</div>
+          <table class="tbl">
+            <thead><tr><th>Pattern</th><th>Classification</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>CNV — upper &gt;10 µV, lower &gt;5 µV</td><td><span class="badge badge-ok">Normal</span></td><td>No action — cooling not indicated on aEEG alone</td></tr>
+              <tr><td>DNV — lower &lt;5 µV</td><td><span class="badge badge-warn">Borderline</span></td><td>Consider cooling if Criterion A met — discuss senior</td></tr>
+              <tr><td>Burst suppression — lower ≤2 µV with bursts</td><td><span class="badge badge-warn">Abnormal</span></td><td>Strong indication for cooling if Criterion A met</td></tr>
+              <tr><td>CLV — upper &lt;10 µV continuously</td><td><span class="badge badge-no">Severely abnormal</span></td><td>Initiate cooling — escalate care, poor prognosis</td></tr>
+              <tr><td>Flat / isoelectric — lower &lt;2 µV, upper &lt;5 µV</td><td><span class="badge badge-no">Severely abnormal</span></td><td>Initiate cooling + consider palliative care discussion</td></tr>
+              <tr><td>Electrographic seizures (any background)</td><td><span class="badge badge-info">Seizure</span></td><td>Confirm with video EEG — treat seizures — supports cooling</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert info">
+          <span class="ai">📋</span>
+          <span>Recovery of background to continuous normal voltage (CNV) within 24–48 hours of cooling onset is associated with improved neurodevelopmental outcome. Document aEEG pattern at 24, 48, and 72 hours.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FLUIDS ══ -->
+    <section id="screen-fluids" class="screen" aria-label="Fluid regimen">
+      <div class="section-label">IV fluid management during therapeutic hypothermia</div>
+
+      <div class="card">
+        <div class="card-title">💧 Day-by-day fluid rate guide</div>
+        <table class="tbl">
+          <thead><tr><th>Phase</th><th>Rate</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Day 1 (0–24h) — Induction</td><td><strong>40–60 mL/kg/day</strong></td><td>10% Dextrose; fluid restricted</td></tr>
+            <tr><td>Day 2 (24–48h) — Late maintenance</td><td><strong>60–80 mL/kg/day</strong></td><td>Increase if good UO &gt;1 mL/kg/hr; reassess renal function</td></tr>
+            <tr><td>Day 3 (48–72h) — End phase</td><td><strong>80–100 mL/kg/day</strong></td><td>Titrate to UO, weight, clinical status</td></tr>
+            <tr><td>Rewarming (~72–78h)</td><td><strong>100–120 mL/kg/day</strong></td><td>Transition to enteral when tolerated; watch for metabolic rebound</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert warn">
+        <span class="ai">⚠️</span>
+        <span>Target urine output <strong>1–3 mL/kg/hr</strong>. Alert senior if UO &lt;1 mL/kg/hr for &gt;2 consecutive hours. Weight gain &gt;10% = overload; weight loss &gt;10% = inadequate intake.</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🩸 Fluid type by indication</div>
+        <table class="tbl">
+          <thead><tr><th>Indication</th><th>Fluid / product</th></tr></thead>
+          <tbody>
+            <tr><td>Maintenance IV fluid</td><td>10% Dextrose (D10W) + electrolytes as per monitoring</td></tr>
+            <tr><td>Hypoglycaemia (BSL &lt;2.6 mmol/L)</td><td>Bolus 2 mL/kg 10% Dextrose IV over 5 min → increase infusion rate</td></tr>
+            <tr><td>Haemodynamic instability / volume expansion</td><td>0.9% Normal Saline 10–20 mL/kg IV over 30–60 min; reassess after each bolus</td></tr>
+            <tr><td>Anaemia (Hb &lt;10 g/dL)</td><td>PRBCs</td></tr>
+            <tr><td>Thrombocytopaenia (Plt &lt;50 + bleeding, or &lt;20 prophylactic)</td><td>Platelets</td></tr>
+            <tr><td>Coagulopathy (INR &gt;2.0 / fibrinogen &lt;1.5 g/L)</td><td>FFP or cryoprecipitate per coagulation results</td></tr>
+            <tr><td>Enteral feeds (if tolerated)</td><td>Start trophic feeds 10–20 mL/kg/day when haemodynamically stable, bowel sounds present, no NEC risk</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Fluid balance monitoring requirements</div>
+        <table class="tbl">
+          <thead><tr><th>Parameter</th><th>Frequency / requirement</th></tr></thead>
+          <tbody>
+            <tr><td>Urine output (UO)</td><td>IDC mandatory — record <strong>hourly</strong> — target 1–3 mL/kg/hr</td></tr>
+            <tr><td>Fluid balance chart</td><td><strong>4-hourly running total</strong> of all IV fluids, blood products, medications (including flushes) and all losses</td></tr>
+            <tr><td>Daily weight</td><td>Same time each day — Weight gain &gt;10% = fluid overload; weight loss &gt;10% = inadequate</td></tr>
+            <tr><td>Oedema assessment</td><td>Peripheral, facial, peri-orbital, ascites — assessed at each nursing round</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ MONITORING ══ -->
+    <section id="screen-monitoring" class="screen" aria-label="Monitoring targets">
+      <div class="section-label">Biochemical monitoring targets and action thresholds</div>
+
+      <div class="mon-grid">
+        <div class="mon-card">
+          <div class="mfreq">Every 4h cooling · 6h rewarming</div>
+          <div class="mtest">Blood glucose (BSL)</div>
+          <div class="mtarget">Target: 2.6–10 mmol/L</div>
+        </div>
+        <div class="mon-card">
+          <div class="mfreq">Every 8–12h · 4h if supplementing</div>
+          <div class="mtest">Ionised calcium (iCa)</div>
+          <div class="mtarget">Target: 1.1–1.4 mmol/L</div>
+        </div>
+        <div class="mon-card">
+          <div class="mfreq">Admission · 12h · then daily</div>
+          <div class="mtest">Serum magnesium</div>
+          <div class="mtarget">Target: 0.7–1.2 mmol/L</div>
+        </div>
+        <div class="mon-card">
+          <div class="mfreq">Every 8–12h</div>
+          <div class="mtest">Sodium / Potassium</div>
+          <div class="mtarget">Na 130–150 · K 3.0–6.0 mmol/L</div>
+        </div>
+        <div class="mon-card">
+          <div class="mfreq">Every 4 hours</div>
+          <div class="mtest">Blood gas (pH, pCO₂, lactate)</div>
+          <div class="mtarget">pH &gt;7.1 · pCO₂ 40–55 · Lac &lt;5</div>
+        </div>
+        <div class="mon-card">
+          <div class="mfreq">Daily</div>
+          <div class="mtest">FBC + coagulation + LFTs + creatinine</div>
+          <div class="mtarget">Plt &gt;50 · Hb &gt;10 · INR &lt;2.0</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🩸 Glucose action thresholds</div>
+          <table class="tbl">
+            <tr><td>BSL &lt;2.6 mmol/L</td><td><span class="badge badge-no">Treat</span></td><td>2 mL/kg 10% Dex bolus IV; increase rate; recheck 30–60 min</td></tr>
+            <tr><td>2.6–10 mmol/L</td><td><span class="badge badge-ok">Target</span></td><td>Continue; routine monitoring</td></tr>
+            <tr><td>BSL &gt;10 mmol/L</td><td><span class="badge badge-warn">Reduce</span></td><td>Reduce dextrose concentration/rate; insulin only if &gt;15 — discuss senior</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Calcium action thresholds</div>
+          <table class="tbl">
+            <tr><td>iCa &lt;1.0 mmol/L</td><td><span class="badge badge-no">Severe</span></td><td>Ca gluconate 10%: 0.5–1 mL/kg IV over 10–15 min (ECG monitoring, via UVC)</td></tr>
+            <tr><td>iCa 1.0–1.2 mmol/L</td><td><span class="badge badge-warn">Supplement</span></td><td>Add Ca gluconate 2 mL/kg/day 10% to maintenance IV; recheck 4–8h</td></tr>
+            <tr><td>iCa 1.2–1.8 mmol/L</td><td><span class="badge badge-ok">Normal</span></td><td>Routine monitoring 8–12 hourly</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert danger">
+        <span class="ai">🚫</span>
+        <span><strong>Calcium IV safety:</strong> Never give calcium gluconate via peripheral IV unless absolutely necessary — severe tissue necrosis risk. Use UVC wherever available. Never give as rapid bolus — risk of bradycardia and cardiac arrest. ECG monitoring is mandatory during any IV calcium administration.</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🏥 End-organ monitoring summary</div>
+        <table class="tbl">
+          <thead><tr><th>System</th><th>Key parameters</th><th>Action threshold</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Brain / neurological</strong></td><td>Thompson/Sarnat q4–6h; aEEG continuous; seizure chart; fontanelle</td><td>Worsening score → escalate; seizures → treat (Section 10 SOP)</td></tr>
+            <tr><td><strong>Cardiovascular</strong></td><td>BP continuous; HR + ECG; CRT q4h; lactate 4-hourly</td><td>SBP &lt;40 or MAP &lt;35 → bolus ± inotrope; CRT &gt;3s → assess; lactate &gt;5 → review</td></tr>
+            <tr><td><strong>Respiratory</strong></td><td>SpO₂ continuous; blood gas 4-hourly</td><td>pCO₂ &lt;35 → cerebral vasoconstriction risk; pCO₂ &gt;55 → review ventilation</td></tr>
+            <tr><td><strong>Renal</strong></td><td>Hourly UO; daily creatinine/urea; electrolytes 8–12h</td><td>UO &lt;1 mL/kg/hr &gt;2h → assess; rising creatinine → nephrology</td></tr>
+            <tr><td><strong>Haematological</strong></td><td>Daily FBC; daily coagulation; crossmatch on admission</td><td>Plt &lt;50 → transfusion discussion; Hb &lt;10 + compromise → PRBCs; DIC → FFP/cryo/plt</td></tr>
+            <tr><td><strong>GI</strong></td><td>Bowel sounds q8h; abdominal exam q8h</td><td>Distension or bloody stool → withhold feeds; suspected NEC → NBM + antibiotics + surgical</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔬 Cranial ultrasound — Resistance Index (RI)</div>
+        <p style="font-size:12px;color:#64748b;margin-bottom:10px">RI = (Peak Systolic Velocity − End Diastolic Velocity) ÷ Peak Systolic Velocity &nbsp;·&nbsp; Anterior cerebral artery</p>
+        <table class="tbl">
+          <thead><tr><th>RI value</th><th>Interpretation</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>0.60–0.80</td><td><span class="badge badge-ok">Normal cerebral perfusion</span></td><td>Continue standard monitoring</td></tr>
+            <tr><td>&gt;0.90</td><td><span class="badge badge-no">Severe cerebral oedema</span></td><td>Poor prognosis — escalate, discuss neurology, consider MRI</td></tr>
+            <tr><td>&lt;0.55</td><td><span class="badge badge-warn">Cerebral hyperaemia</span></td><td>Severe HIE — monitor closely, repeat USS in 12 hours</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:12px;color:#64748b;margin-top:10px">
+          USS timing: within 24h of admission · repeat day 3–5 · repeat at completion of rewarming.<br>
+          MRI brain: day 4–5 post-birth (peak DWI sensitivity) — sequences: DWI, T1, T2, MR spectroscopy.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ DRUGS ══ -->
+    <section id="screen-drugs" class="screen" aria-label="Drug dosing reference">
+      <div class="section-label">Pharmacological management during therapeutic hypothermia</div>
+
+      <div class="card">
+        <div class="card-title">💊 Dexmedetomidine — sedation and anti-shivering</div>
+        <table class="tbl">
+          <thead><tr><th>Parameter</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td>Route</td><td>Intravenous continuous infusion</td></tr>
+            <tr><td>Starting dose</td><td><strong>0.2 mcg/kg/hour</strong></td></tr>
+            <tr><td>Maintenance range</td><td>0.2–0.5 mcg/kg/hour — titrate to effect</td></tr>
+            <tr><td>Maximum dose</td><td><strong>0.7 mcg/kg/hour</strong> — do not exceed</td></tr>
+            <tr><td>Monitoring</td><td>Heart rate + blood pressure every <strong>1 hour</strong></td></tr>
+            <tr><td>Contraindications</td><td>HR &lt;80 bpm · SBP &lt;40 mmHg · significant AV block</td></tr>
+            <tr><td>Advantages</td><td>Minimal respiratory depression · combined sedation + analgesia · reduces shivering</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⚡ Anticonvulsant ladder — neonatal seizure management</div>
+        <table class="tbl">
+          <thead><tr><th>Line</th><th>Drug</th><th>Loading dose</th><th>Route</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-info">1st line</span></td>
+              <td><strong>Phenobarbitone</strong></td>
+              <td>20 mg/kg slow IV over 30 min</td>
+              <td>IV</td>
+              <td>Repeat 10 mg/kg if no response. Max cumulative 40 mg/kg.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-info">2nd line</span></td>
+              <td><strong>Levetiracetam</strong></td>
+              <td>40–60 mg/kg over 15 min</td>
+              <td>IV</td>
+              <td>Monitor LFTs. Fewer drug interactions. Preferred 2nd agent.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-warn">3rd line</span></td>
+              <td><strong>Midazolam</strong></td>
+              <td>0.05–0.15 mg/kg/hour infusion</td>
+              <td>IV</td>
+              <td>Respiratory depression risk — continuous SpO₂ monitoring essential.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-gray">Alternative</span></td>
+              <td><strong>Phenytoin</strong></td>
+              <td>20 mg/kg at max 1 mg/kg/min</td>
+              <td>IV</td>
+              <td>Cardiac monitoring required. Avoid in hepatic failure.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert danger">
+        <span class="ai">🚫</span>
+        <span>All anticonvulsant doses require adjustment for renal or hepatic dysfunction during TH. Confirm doses with pharmacy and senior clinician before administration. Document all seizures on seizure chart.</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🧪 Magnesium management</div>
+        <table class="tbl">
+          <thead><tr><th>Mg level</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Mg &lt;0.7 mmol/L</td>
+              <td><span class="badge badge-no">Hypomagnesaemia</span></td>
+              <td>IV MgSO₄ 50%: 0.1 mL/kg (= 0.4 mmol/kg) diluted, given over 30–60 min. Recheck after 4–6 hours.</td>
+            </tr>
+            <tr>
+              <td>0.7–1.2 mmol/L</td>
+              <td><span class="badge badge-ok">Normal</span></td>
+              <td>Continue routine monitoring; 12-hourly if receiving IV Mg therapy</td>
+            </tr>
+            <tr>
+              <td>Mg &gt;2.0 mmol/L</td>
+              <td><span class="badge badge-warn">Hypermagnesaemia</span></td>
+              <td>Monitor for respiratory depression, bradycardia, hypotension. Calcium gluconate is antidote — keep at bedside. Allow renal excretion; repeat level in 4–6 hours.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:12px;color:#64748b;margin-top:8px">Note: Hypermagnesaemia may occur if maternal MgSO₄ was given antenatally for neuroprotection or preterm labour.</div>
+      </div>
+    </section>
+
+    <!-- ══ CHECKLIST ══ -->
+    <section id="screen-checklist" class="screen" aria-label="Pre-cooling checklist">
+      <div class="section-label">Pre-cooling checklist — complete before initiating Tecotherm Neo</div>
+
+      <div class="cl-progress">
+        <div>
+          <div class="pnum" id="cl-num">0 / 21</div>
+          <div class="plabel">items completed</div>
+          <div class="progress-bar" style="width:200px">
+            <div class="progress-fill" id="cl-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <button class="btn-reset" onclick="resetChecklist()">↺ Reset all</button>
+      </div>
+
+      <div class="card">
+        <div id="cl-items"></div>
+      </div>
+    </section>
+
+    <!-- ══ FOLLOW-UP ══ -->
+    <section id="screen-followup" class="screen" aria-label="Neurodevelopmental follow-up">
+      <div class="section-label">Neurodevelopmental follow-up pathway — AAP 2026</div>
+      <div class="alert info">
+        <span class="ai">ℹ️</span>
+        <span>All neonates who undergo therapeutic hypothermia must be enrolled in a structured neurodevelopmental surveillance programme before discharge.</span>
+      </div>
+      <div class="card">
+        <div class="card-title">📅 Follow-up schedule</div>
+        <table class="tbl">
+          <thead><tr><th>Domain</th><th>Timing</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hearing screening</strong></td><td>Before discharge</td><td>AABR / OAE — refer to audiology if abnormal</td></tr>
+            <tr><td><strong>Ophthalmology</strong></td><td>4–6 weeks post-discharge</td><td>Retinal examination; assess visual function</td></tr>
+            <tr><td><strong>Neurology review</strong></td><td>3, 6, 12, 18, 24 months</td><td>Developmental surveillance; seizure assessment</td></tr>
+            <tr><td><strong>Developmental paediatrics</strong></td><td>6, 12, 18 months</td><td>Structured developmental assessment (BSID or equivalent)</td></tr>
+            <tr><td><strong>Early intervention</strong></td><td>As soon as any concern identified</td><td>Physiotherapy, occupational therapy, speech therapy</td></tr>
+            <tr><td><strong>Repeat MRI brain</strong></td><td>12–18 months if indicated</td><td>If initial MRI showed significant abnormality</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">📖 Required documentation — full cooling period</div>
+        <ul style="font-size:13px;color:#1a2233;line-height:2;padding-left:1.25rem">
+          <li>Cooling eligibility checklist (signed by specialist)</li>
+          <li>Thompson Score chart — documented at 0, 4, 8, 12, 24, 48, 72 hours</li>
+          <li>Modified Sarnat staging documented at initial assessment</li>
+          <li>aEEG background pattern — documented at 24, 48, 72 hours and each shift handover</li>
+          <li>Cooling observation chart — temperature q15 min during induction, then hourly</li>
+          <li>Fluid balance chart — 4-hourly running total, 24-hour cumulative</li>
+          <li>Seizure chart (commenced at initiation of cooling)</li>
+          <li>Rewarming chart — temperature hourly until 36.5°C</li>
+          <li>Biochemical monitoring log (BSL, iCa, Mg, electrolytes)</li>
+          <li>Daily senior ward round documentation</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 SOP reference</div>
+        <table class="tbl">
+          <tr><td>Document reference</td><td>MIRI-NICU-SOP-HIE</td></tr>
+          <tr><td>Cooling device</td><td>Tecotherm Neo Servo-Controlled Cooling System</td></tr>
+          <tr><td>Neuromonitoring device</td><td>Natus Video aEEG Monitor</td></tr>
+          <tr><td>Date last reviewed</td><td>March 2026</td></tr>
+          <tr><td>Next review date</td><td>March 2029</td></tr>
+          <tr><td>Reviewed by</td><td>Dr Wong Ann Cheng, Neonatologist</td></tr>
+          <tr><td>Verified by (HOD)</td><td>Dr Hii King Ching, Head of Department</td></tr>
+          <tr><td>Approved by (Director)</td><td>Dr Jack Wong Siew Yu, Hospital Director</td></tr>
+          <tr><td>Primary references</td><td>AAP 2026 · Shankaran et al. NEJM 2005 · Thompson et al. Acta Paediatr 1997 · MOH Malaysia CPG Neonatal Seizures 2022 · Gluckman et al. Lancet 2005</td></tr>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="app-footer">
+  Miri Hospital NICU · Paediatric Department · MIRI-NICU-SOP-HIE · March 2026 &nbsp;|&nbsp;
+  For clinical use by trained NICU staff only. Always verify with current institutional SOP and senior clinician guidance.
+</footer>
+
+<script>
+/* ── State ── */
+var S = { ga:null,bw:null,age:null,ph:null,bd:null,apgar:null,ppv:null,sentinel:null,sarnat:null,sz:null,aeeg:null };
+var checkState = [];
+var tsScores = { tone:0, consciousness:0, fits:0, posture:0, moro:0, grasp:0, suck:0, resp:0, fontanelle:0 };
+
+/* ── Navigation ── */
+var screens = ['eligibility','thompson','protocol','fluids','monitoring','drugs','checklist','followup'];
+var navLabels = {
+  eligibility:'✅ Eligibility',
+  thompson:'🧠 Thompson',
+  protocol:'🌡️ Protocol',
+  fluids:'💧 Fluids',
+  monitoring:'📊 Monitoring',
+  drugs:'💊 Drugs',
+  checklist:'📋 Checklist',
+  followup:'📅 Follow-up'
+};
+
+function buildMobileNav() {
+  var nav = document.getElementById('mob-nav');
+  nav.innerHTML = screens.map(function(id) {
+    return '<button class="mob-nav-btn'+(id==='eligibility'?' active':'')+'" onclick="showScreen(\''+id+'\',this)">'+navLabels[id]+'</button>';
+  }).join('');
+}
+
+function showScreen(id, el) {
+  screens.forEach(function(sid) {
+    document.getElementById('screen-'+sid).classList.remove('active');
+  });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.mob-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('screen-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ── Protocol phases ── */
+function showPhase(id, el) {
+  ['induction','maintenance','rewarm','aeeg'].forEach(function(p) {
+    var el2 = document.getElementById('phase-'+p);
+    if (el2) el2.style.display = 'none';
+  });
+  document.querySelectorAll('.phase-tab').forEach(function(b){ b.classList.remove('active'); });
+  var target = document.getElementById('phase-'+id);
+  if (target) target.style.display = 'block';
+  el.classList.add('active');
+}
+
+/* ── Eligibility ── */
+function pick(field, val, el) {
+  var group = document.querySelectorAll('#'+field+'-opts .radio-opt');
+  group.forEach(function(e){ e.classList.remove('sel'); });
+  el.classList.add('sel');
+  S[field] = val;
+  updateEligibility();
+}
+
+function updateEligibility() {
+  var tsInputEl = document.getElementById('ts-input');
+  var tsVal = tsInputEl ? (parseInt(tsInputEl.value) || 0) : 0;
+  var r = document.getElementById('eligibility-result');
+
+  // Entry criteria
+  var entryOk = null;
+  if (S.ga === 'lt35' || S.bw === 'le2') entryOk = false;
+  else if (S.ga === 'ge36' && S.bw === 'gt2') entryOk = true;
+  else if (S.ga === '35-36' && S.bw === 'gt2') entryOk = 'discuss';
+
+  // Age
+  var ageOk = null, ageMsg = '';
+  if (S.age === 'le6') { ageOk = true; }
+  else if (S.age === '6-12cooled') { ageOk = true; ageMsg = 'Transfer-cooled: acceptable. Reassess eligibility on arrival and document transfer cooling duration.'; }
+  else if (S.age === '6-12not') { ageOk = 'discuss'; ageMsg = 'Not transfer-cooled: may be considered — parental discussion and senior clinician approval required.'; }
+  else if (S.age === 'gt12') { ageOk = false; ageMsg = 'Age >12 hours: benefit not established. Do not initiate cooling.'; }
+
+  // Criterion A
+  var critA = null;
+  var severeAcidosis = S.ph === 'le70' || S.bd === 'ge16';
+  var borderlineAcidosis = (S.ph === '701-715' || S.bd === '10-15') && S.sentinel === 'yes' && (S.apgar === 'le5' || S.ppv === 'yes');
+  var noGasPath = S.ph === 'na' && (S.apgar === 'le5' || S.ppv === 'yes') && S.sentinel === 'yes';
+  if (severeAcidosis) critA = true;
+  else if (borderlineAcidosis || noGasPath) critA = 'borderline';
+  else if (S.ph !== null || S.bd !== null) critA = false;
+
+  // Criterion B
+  var critB = null;
+  if (S.sarnat === 'II' || S.sarnat === 'III' || S.sz === 'yes' || tsVal >= 7) critB = true;
+  else if (S.sarnat !== null || (tsInputEl && tsInputEl.value !== '')) critB = false;
+
+  // Criterion C
+  var critC = null;
+  if (S.aeeg === 'bs' || S.aeeg === 'clv' || S.aeeg === 'dnv') critC = true;
+  else if (S.aeeg === 'normal') critC = false;
+
+  if (entryOk === null && ageOk === null && critA === null) { r.innerHTML = ''; return; }
+
+  var overallOk = entryOk === true && ageOk !== false && critA === true && (critB === true || critC === true);
+  var overallNo = entryOk === false || ageOk === false;
+  var critANo = entryOk !== false && ageOk !== false && critA === false;
+
+  var cls, title, sub = '';
+  if (overallOk) {
+    cls = 'go'; title = '✅ Initiate therapeutic hypothermia';
+    sub = 'All criteria satisfied. Obtain parental consent and initiate Tecotherm Neo: target 33.5°C for 72 hours.';
+  } else if (overallNo || critANo) {
+    cls = 'no'; title = '🚫 Therapeutic hypothermia not recommended';
+    if (entryOk === false) sub = 'Entry criteria not met: GA <35 weeks or birth weight ≤2 kg. Consult neonatologist if in doubt.';
+    else if (ageOk === false) sub = 'Age at presentation >12 hours — benefit of TH not established at this stage.';
+    else sub = 'Criterion A not satisfied: insufficient evidence of hypoxia-ischaemia from blood gas/Apgar data.';
+  } else {
+    cls = 'discuss'; title = '⚠️ Discuss with senior specialist';
+    if (entryOk === 'discuss') sub = '35–35⁶⁄₇ weeks gestation: borderline eligibility — discuss risks and benefits with parents. Requires case-by-case senior approval.';
+    else if (ageOk === 'discuss') sub = 'Age 6–12 hours, not transfer-cooled: may be considered. Parental discussion and senior clinician approval required.';
+    else if (critA === 'borderline') sub = 'Borderline Criterion A: pH 7.01–7.15 or BD 10–15. Sentinel event present with Apgar ≤5 or PPV ≥10 min — criteria technically met but discuss with senior for confirmation.';
+    else if (critB === false && critA === true) sub = 'Criterion A met. Criterion B currently not met. Reassess neurological status or apply aEEG (Criterion C) if equivocal.';
+    else sub = 'Borderline assessment — proceed to senior clinician discussion before initiating cooling.';
+  }
+
+  var extras = '';
+  if (ageMsg) extras += '<div class="r-sub" style="margin-top:6px">'+ageMsg+'</div>';
+
+  r.innerHTML = '<div class="result-box '+cls+'"><div class="r-title">'+title+'</div><div class="r-sub">'+sub+'</div>'+extras+'</div>';
+}
+
+/* ── Thompson Score ── */
+var tsParams = [
+  { label:'Tone', opts:['Normal','Hypertonia','Hypotonia','Flaccid'], scores:[0,1,2,3] },
+  { label:'Level of consciousness', opts:['Normal','Hyperalert','Lethargic','Coma'], scores:[0,1,2,3] },
+  { label:'Fits / seizures', opts:['None','<3/day','>2/day','Status epilepticus'], scores:[0,1,2,3] },
+  { label:'Posture', opts:['Normal','Fisting/cycling','Distal flexion','Decerebrate'], scores:[0,1,2,3] },
+  { label:'Moro reflex', opts:['Normal','Partial','Absent'], scores:[0,1,2] },
+  { label:'Grasp reflex', opts:['Normal','Poor','Absent'], scores:[0,1,2] },
+  { label:'Suck reflex', opts:['Normal','Poor','Absent'], scores:[0,1,2] },
+  { label:'Respirations', opts:['Normal','Hyperventilation','Brief apnoea','Apnoea/IPPV'], scores:[0,1,2,3] },
+  { label:'Fontanelle', opts:['Normal','Full','Tense'], scores:[0,1,2] }
+];
+
+function initThompson() {
+  var container = document.getElementById('ts-rows');
+  container.innerHTML = tsParams.map(function(p, pi) {
+    return '<div class="ts-row">'
+      + '<div class="ts-label">'+p.label+'</div>'
+      + '<div class="ts-opts">'
+      + p.opts.map(function(o, oi) {
+          return '<button class="ts-btn'+(oi===0?' sel':'')+'" onclick="setTS('+pi+','+p.scores[oi]+',this)">'+p.scores[oi]+' — '+o+'</button>';
+        }).join('')
+      + '</div></div>';
+  }).join('');
+}
+
+function setTS(pi, score, el) {
+  var rows = document.querySelectorAll('.ts-row');
+  rows[pi].querySelectorAll('.ts-btn').forEach(function(b){ b.classList.remove('sel'); });
+  el.classList.add('sel');
+  tsScores[Object.keys(tsScores)[pi]] = score;
+  updateTSTotal();
+}
+
+function updateTSTotal() {
+  var total = Object.values(tsScores).reduce(function(a,b){ return a+b; }, 0);
+  document.getElementById('ts-total-num').textContent = total;
+  var sev, rec;
+  if (total <= 6)       { sev = 'Mild HIE (0–6)';               rec = 'Cooling NOT indicated — close observation and monitoring.'; }
+  else if (total <= 10) { sev = 'Moderate HIE (7–10)';          rec = 'Cooling INDICATED if other criteria met — initiate promptly.'; }
+  else if (total <= 14) { sev = 'Moderate-severe HIE (11–14)';  rec = 'Cooling INDICATED — urgent initiation and intensive monitoring.'; }
+  else                  { sev = 'Severe HIE (15–22)';           rec = 'Immediate initiation required. Maximum monitoring. Consider palliative discussion if score ≥20.'; }
+  document.getElementById('ts-sev').textContent = sev;
+  document.getElementById('ts-rec').textContent = rec;
+}
+
+/* ── Checklist ── */
+var checkItems = [
+  'Cord blood gas or first-hour gas obtained and documented (within 1 hour of birth)',
+  'Apgar scores at 1, 5, and 10 minutes documented',
+  'Gestational age ≥35 weeks AND birth weight >2 kg confirmed',
+  'Age at initiation ≤6 hours (or transfer-cooled documentation if 6–12 hours)',
+  'Criterion A (blood gas / Apgar evidence) confirmed and documented',
+  'Criterion B: Thompson / Sarnat score documented — moderate or severe grade recorded',
+  'Criterion C: aEEG initiated and initial background pattern documented',
+  'Parental consent obtained, documented, and signed',
+  'Cooling eligibility checklist completed and signed by senior clinician',
+  'Tecotherm Neo assembled, primed, and function-checked',
+  'Rectal temperature probe inserted to 5 cm depth and secured',
+  'Alarm limits confirmed: Low 33.0°C / High 34.0°C',
+  'Natus aEEG electrodes applied — impedance confirmed <10 kΩ',
+  'IV access secured (UVC / UAC preferred, or peripheral IV)',
+  'Urinary catheter inserted — baseline urine output documented',
+  'Baseline bloods: blood gas, glucose, iCa, electrolytes, FBC, coagulation, magnesium',
+  'Magnesium level checked (especially if maternal MgSO₄ given)',
+  'Cranial ultrasound within 24 hours arranged',
+  'Fluid restriction commenced: 40–60 mL/kg/day D10W',
+  'Seizure chart commenced',
+  'Dexmedetomidine infusion prepared if shivering expected'
+];
+
+function initChecklist() {
+  checkState = checkItems.map(function(){ return false; });
+  renderChecklist();
+}
+
+function renderChecklist() {
+  var done = checkState.filter(Boolean).length;
+  var total = checkItems.length;
+  document.getElementById('cl-num').textContent = done + ' / ' + total;
+  document.getElementById('cl-bar').style.width = Math.round(done/total*100) + '%';
+  document.getElementById('cl-items').innerHTML = checkItems.map(function(item, i) {
+    return '<div class="cl-item" onclick="toggleCheck('+i+')">'
+      + '<div class="cl-box'+(checkState[i]?' done':'')+'"></div>'
+      + '<span class="cl-text'+(checkState[i]?' done':'')+'">'+item+'</span>'
+      + '</div>';
+  }).join('');
+}
+
+function toggleCheck(i) { checkState[i] = !checkState[i]; renderChecklist(); }
+function resetChecklist() { checkState = checkItems.map(function(){ return false; }); renderChecklist(); }
+
+/* ── Init ── */
+buildMobileNav();
+initThompson();
+initChecklist();
+updateTSTotal();
+updateEligibility();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 680 520" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Therapeutic Hypothermia — Miri Hospital NICU</title>
+<desc>A stylised medical icon showing a human brain overlaid with a cooling snowflake, representing neonatal therapeutic hypothermia. Deep navy background with icy blue tones.</desc>
+
+<style>
+  .bg { fill: #0f2744; }
+  .brain-main { fill: #1a4a7a; }
+  .brain-mid  { fill: #2563a8; }
+  .brain-hi   { fill: #3b82c4; }
+  .brain-fold { fill: none; stroke: #5ba3d9; stroke-width: 2.5; stroke-linecap: round; }
+  .brain-fold-lt { fill: none; stroke: #9ecbee; stroke-width: 1.5; stroke-linecap: round; }
+  .sulcus     { fill: none; stroke: #0f2744; stroke-width: 3; stroke-linecap: round; }
+  .snowflake  { stroke: #e8f4ff; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .sf-arm     { stroke-width: 3.5; }
+  .sf-branch  { stroke-width: 2; }
+  .sf-dot     { fill: #e8f4ff; }
+  .glow-ring  { fill: none; stroke: #93c5fd; stroke-width: 1; opacity: 0.35; }
+  .stem       { fill: #1a4a7a; stroke: #2563a8; stroke-width: 1.5; }
+  .ice-dot    { fill: #bfdbfe; opacity: 0.6; }
+  .lbl-title  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 22px; font-weight: 700; fill: #e8f4ff; }
+  .lbl-sub    { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 400; fill: #7db8e8; }
+  .temp-text  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; fill: #93c5fd; }
+</style>
+
+<!-- Background -->
+<circle cx="340" cy="230" r="210" fill="#0d2040"/>
+<circle cx="340" cy="230" r="195" fill="#0f2744"/>
+
+<!-- Ambient ice dots -->
+<circle class="ice-dot" cx="180" cy="130" r="3"/>
+<circle class="ice-dot" cx="510" cy="115" r="2.5"/>
+<circle class="ice-dot" cx="155" cy="300" r="2"/>
+<circle class="ice-dot" cx="530" cy="310" r="3"/>
+<circle class="ice-dot" cx="250" cy="400" r="2"/>
+<circle class="ice-dot" cx="440" cy="405" r="2.5"/>
+<circle class="ice-dot" cx="200" cy="195" r="1.5"/>
+<circle class="ice-dot" cx="490" cy="200" r="1.5"/>
+
+<!-- Glow rings -->
+<circle class="glow-ring" cx="340" cy="215" r="140"/>
+<circle class="glow-ring" cx="340" cy="215" r="115" opacity="0.25"/>
+
+<!-- Right hemisphere outer -->
+<path class="brain-main" d="M340 105 C375 98,420 100,450 115 C485 132,505 155,510 180 C518 210,512 238,500 258 C490 275,475 285,468 298 C460 315,462 335,455 348 C445 365,428 372,410 370 C395 368,383 358,375 350 C368 343,365 335,360 330 L340 325 Z"/>
+<!-- Left hemisphere outer -->
+<path class="brain-main" d="M340 105 C305 98,260 100,230 115 C195 132,175 155,170 180 C162 210,168 238,180 258 C190 275,205 285,212 298 C220 315,218 335,225 348 C235 365,252 372,270 370 C285 368,297 358,305 350 C312 343,315 335,320 330 L340 325 Z"/>
+
+<!-- Right hemisphere mid -->
+<path class="brain-mid" d="M355 110 C385 105,425 110,448 125 C472 142,488 165,492 190 C497 218,490 242,478 260 C468 274,455 282,448 295 C440 310,442 330,436 342 C427 357,413 362,398 360 C385 358,375 348,368 340 C361 332,358 320,354 312 L348 280 L352 200 Z"/>
+<!-- Left hemisphere mid -->
+<path class="brain-mid" d="M325 110 C295 105,255 110,232 125 C208 142,192 165,188 190 C183 218,190 242,202 260 C212 274,225 282,232 295 C240 310,238 330,244 342 C253 357,267 362,282 360 C295 358,305 348,312 340 C319 332,322 320,326 312 L332 280 L328 200 Z"/>
+
+<!-- Highlights -->
+<path class="brain-hi" d="M390 118 C415 120 440 135 452 152 C440 145 416 132 390 130 Z"/>
+<path class="brain-hi" d="M260 118 C240 122 218 136 208 153 C220 145 244 132 260 130 Z"/>
+<path class="brain-hi" d="M460 195 C470 210 472 228 468 244 C466 228 463 210 455 196 Z"/>
+<path class="brain-hi" d="M220 195 C210 210 208 228 212 244 C214 228 217 210 225 196 Z"/>
+
+<!-- Central sulcus -->
+<path class="sulcus" d="M340 108 C340 180,340 250,340 325"/>
+
+<!-- Right hemisphere sulci -->
+<path class="brain-fold" d="M395 125 C408 140 415 165 410 188"/>
+<path class="brain-fold" d="M448 150 C460 168 462 192 455 215"/>
+<path class="brain-fold" d="M478 205 C482 225 476 248 466 262"/>
+<path class="brain-fold" d="M418 295 C428 310 430 328 424 342"/>
+<path class="brain-fold" d="M370 155 C378 172 380 196 374 220"/>
+<path class="brain-fold" d="M360 255 C366 272 366 292 360 310"/>
+
+<!-- Left hemisphere sulci -->
+<path class="brain-fold" d="M285 125 C272 140 265 165 270 188"/>
+<path class="brain-fold" d="M232 150 C220 168 218 192 225 215"/>
+<path class="brain-fold" d="M202 205 C198 225 204 248 214 262"/>
+<path class="brain-fold" d="M322 295 C312 310 310 328 316 342"/>
+<path class="brain-fold" d="M310 155 C302 172 300 196 306 220"/>
+<path class="brain-fold" d="M320 255 C314 272 314 292 320 310"/>
+
+<!-- Light sulci highlights -->
+<path class="brain-fold-lt" d="M420 135 C430 148 435 168 430 188"/>
+<path class="brain-fold-lt" d="M260 135 C250 148 245 168 250 188"/>
+<path class="brain-fold-lt" d="M464 175 C472 190 473 210 468 228"/>
+<path class="brain-fold-lt" d="M216 175 C208 190 207 210 212 228"/>
+
+<!-- Brain stem -->
+<path class="stem" d="M318 322 C312 338 310 355 315 368 C320 378 330 382 340 382 C350 382 360 378 365 368 C370 355 368 338 362 322 Z"/>
+
+<!-- Snowflake — main arms -->
+<line class="snowflake sf-arm" x1="340" y1="190" x2="340" y2="270"/>
+<line class="snowflake sf-arm" x1="300" y1="210" x2="380" y2="250"/>
+<line class="snowflake sf-arm" x1="300" y1="250" x2="380" y2="210"/>
+
+<!-- Snowflake — right arm branches -->
+<line class="snowflake sf-branch" x1="380" y1="230" x2="393" y2="220"/>
+<line class="snowflake sf-branch" x1="380" y1="230" x2="393" y2="240"/>
+<line class="snowflake sf-branch" x1="368" y1="224" x2="378" y2="215"/>
+<line class="snowflake sf-branch" x1="368" y1="236" x2="378" y2="245"/>
+
+<!-- Snowflake — left arm branches -->
+<line class="snowflake sf-branch" x1="300" y1="230" x2="287" y2="220"/>
+<line class="snowflake sf-branch" x1="300" y1="230" x2="287" y2="240"/>
+<line class="snowflake sf-branch" x1="312" y1="224" x2="302" y2="215"/>
+<line class="snowflake sf-branch" x1="312" y1="236" x2="302" y2="245"/>
+
+<!-- Snowflake — top arm branches -->
+<line class="snowflake sf-branch" x1="340" y1="190" x2="330" y2="178"/>
+<line class="snowflake sf-branch" x1="340" y1="190" x2="350" y2="178"/>
+<line class="snowflake sf-branch" x1="340" y1="205" x2="330" y2="196"/>
+<line class="snowflake sf-branch" x1="340" y1="205" x2="350" y2="196"/>
+
+<!-- Snowflake — bottom arm branches -->
+<line class="snowflake sf-branch" x1="340" y1="270" x2="330" y2="282"/>
+<line class="snowflake sf-branch" x1="340" y1="270" x2="350" y2="282"/>
+<line class="snowflake sf-branch" x1="340" y1="255" x2="330" y2="264"/>
+<line class="snowflake sf-branch" x1="340" y1="255" x2="350" y2="264"/>
+
+<!-- Snowflake — diagonal branches -->
+<line class="snowflake sf-branch" x1="366" y1="214" x2="374" y2="203"/>
+<line class="snowflake sf-branch" x1="366" y1="214" x2="377" y2="214"/>
+<line class="snowflake sf-branch" x1="356" y1="208" x2="362" y2="198"/>
+<line class="snowflake sf-branch" x1="314" y1="214" x2="306" y2="203"/>
+<line class="snowflake sf-branch" x1="314" y1="214" x2="303" y2="214"/>
+<line class="snowflake sf-branch" x1="324" y1="208" x2="318" y2="198"/>
+<line class="snowflake sf-branch" x1="366" y1="246" x2="374" y2="257"/>
+<line class="snowflake sf-branch" x1="366" y1="246" x2="377" y2="246"/>
+<line class="snowflake sf-branch" x1="356" y1="252" x2="362" y2="262"/>
+<line class="snowflake sf-branch" x1="314" y1="246" x2="306" y2="257"/>
+<line class="snowflake sf-branch" x1="314" y1="246" x2="303" y2="246"/>
+<line class="snowflake sf-branch" x1="324" y1="252" x2="318" y2="262"/>
+
+<!-- Centre dot -->
+<circle class="sf-dot" cx="340" cy="230" r="7"/>
+<circle cx="340" cy="230" r="4" fill="#0f2744"/>
+
+<!-- Arm tip dots -->
+<circle class="sf-dot" cx="340" cy="190" r="4"/>
+<circle class="sf-dot" cx="340" cy="270" r="4"/>
+<circle class="sf-dot" cx="300" cy="210" r="4"/>
+<circle class="sf-dot" cx="380" cy="250" r="4"/>
+<circle class="sf-dot" cx="300" cy="250" r="4"/>
+<circle class="sf-dot" cx="380" cy="210" r="4"/>
+
+<!-- Temperature badge -->
+<rect x="270" y="395" width="140" height="36" rx="18" fill="#1e3a5f" stroke="#3b82c4" stroke-width="1.5"/>
+<text class="temp-text" x="340" y="418" text-anchor="middle">33.5°C · 72 h</text>
+
+<!-- Labels -->
+<text class="lbl-title" x="340" y="470" text-anchor="middle">Therapeutic Hypothermia</text>
+<text class="lbl-sub" x="340" y="492" text-anchor="middle">Miri Hospital NICU · Neonatal HIE</text>
+
+</svg>
